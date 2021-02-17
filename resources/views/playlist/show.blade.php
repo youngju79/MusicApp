@@ -1,4 +1,4 @@
-@extends('layouts.mainplaylist')
+@extends('layouts.main')
 
 @section('title')
     Playlists: {{$playlist->name}}
@@ -22,7 +22,7 @@
                     <td>{{$track->track_name}}</td>
                     <td>{{$track->album_name}}</td>
                     <td>{{$track->artist_name}}</td>
-                    <td>${{$track->genre_name}}</td>
+                    <td>{{$track->genre_name}}</td>
                 </tr>
             @endforeach
         </tbody>

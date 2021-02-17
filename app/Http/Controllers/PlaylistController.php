@@ -37,4 +37,23 @@ class PlaylistController extends Controller
             'tracks' => $tracks
         ]);
     }
+    public function edit($id)
+    {
+        $playlist = DB::table('playlists')->where('id', '=', $id)->first();
+        return view('playlist.edit', [
+            'playlist' => $playlist
+        ]);
+    }
+    public function update($id, $name, Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:30|unique:playlists,name'
+        ]);
+        DB::table('playlists')->where('id', '=', $id)->update([
+            'name' => $request->input('name')
+        ]);
+        return redirect()
+            ->route('playlist.index')
+            ->with('success', "$name was successfully renamed to {$request->input('name')}");
+    }
 }
