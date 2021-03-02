@@ -3,9 +3,14 @@
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\AlbumEloquentController;
 use App\Http\Controllers\TrackController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use App\Models\Artist;
+use App\Models\Track;
+use App\Models\Genre;
+use App\Models\Album;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +28,61 @@ if (env('APP_ENV') !== 'local') {
 }
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('album.index');
+});
+
+Route::get('/eloquent', function(){
+    // QUERYING
+    // return view('eloquent.artists', [
+    //     'artists' => Artist::orderBy('name', 'desc')->get()
+    // ]);
+    // return view('eloquent.tracks', [
+    //     'tracks' => Track::all()
+    // ]);
+    // return view('eloquent.tracks', [
+    //     'tracks' => Track::where('unit_price', '>', 0.99)->orderBy('name')->get()
+    // ]);
+    // return view('eloquent.artist', [
+    //     'artist' => Artist::find(3)
+    // ]);
+    
+    // CREATING
+    // $genre = new Genre();
+    // $genre->name = 'Hip Hop';
+    // $genre->save();
+
+    // DELETING
+    // $genre = Genre::find(26);
+    // $genre->delete();
+
+    // UPDATING
+    // $genre = Genre::where('name', '=', 'Alternative and Punk')->first();
+    // $genre->name = "Alternative & Punk";
+    // $genre->save();
+
+    // RELATIONSHIPS    
+    // return view('eloquent.has-many', [
+    //     'artist' => Artist::find(50)
+    // ]);
+    // return view('eloquent.belongs-to', [
+    //     'album' => Album::find(152)
+    // ]);
+ 
+    // Has N+1 problem
+    // return view('eloquent.eager-loading', [
+    //     'tracks' => Track::where('unit_price', '>', 0.99)
+    //         ->orderBy('name')
+    //         ->limit(5)
+    //         ->get()
+    // ]);
+    // EAGER LOADING (fixes N+1 problem)
+    return view('eloquent.eager-loading', [
+        'tracks' => Track::with('album')
+            ->where('unit_price', '>', 0.99)
+            ->orderBy('name')
+            ->limit(5)
+            ->get()
+    ]);
 });
 
 // MVC- Model View Controller
@@ -41,6 +100,12 @@ Route::get('/albums/create', [AlbumController::class, 'create'])->name('album.cr
 Route::post('/albums', [AlbumController::class, 'store'])->name('album.store');
 Route::get('/albums/{id}/edit', [AlbumController::class, 'edit'])->name('album.edit');
 Route::post('/albums/{id}', [AlbumController::class, 'update'])->name('album.update');
+
+Route::get('/eloquentalbums', [AlbumEloquentController::class, 'index'])->name('eloquentalbum.index');
+Route::get('/eloquentalbums/create', [AlbumEloquentController::class, 'create'])->name('eloquentalbum.create');
+Route::post('/eloquentalbums', [AlbumEloquentController::class, 'store'])->name('eloquentalbum.store');
+Route::get('/eloquentalbums/{id}/edit', [AlbumEloquentController::class, 'edit'])->name('eloquentalbum.edit');
+Route::post('/eloquentalbums/{id}', [AlbumEloquentController::class, 'update'])->name('eloquentalbum.update');
 
 Route::get('/tracks', [TrackController::class, 'index'])->name('track.index');
 Route::get('/tracks/new', [TrackController::class, 'create'])->name('track.create');
