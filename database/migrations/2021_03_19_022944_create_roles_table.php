@@ -22,7 +22,7 @@ class CreateRolesTable extends Migration
         });
 
         Schema::table('users', function (Blueprint $table){
-            // $table->foregin('role_id')->references('id')->on('roles');
+            // $table->foreign('role_id')->references('id')->on('roles');
             $table->foreignId('role_id')->constrained();
         });
 
