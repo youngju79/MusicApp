@@ -15,6 +15,9 @@ use App\Models\Artist;
 use App\Models\Track;
 use App\Models\Genre;
 use App\Models\Album;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewAlbum;
+use App\Jobs\AnnounceNewAlbum;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +93,27 @@ Route::get('/eloquent', function(){
 });
 
 // MVC- Model View Controller
+Route::get('/mail', function(){
+    // Mail::raw('What is your favorite framework?', function($message){
+    //     $message->to('yongzush@usc.edu')->subject('Hello Yong');
+    // });
+
+    // dispatch(function(){
+    //     $masterOfPuppets = Album::find(152);
+    //     Mail::to('yongzush@usc.edu')->send(new NewAlbum($masterOfPuppets));
+    // });
+
+    // $jaggedLittlePill = Album::find(6);
+    // Mail::to('yongzush@usc.edu')->queue(new NewAlbum($jaggedLittlePill));
+
+    $jaggedLittlePill = Album::find(6);
+    // AnnounceNewAlbum::dispatch($jaggedLittlePill);
+    dispatch(new AnnounceNewAlbum($jaggedLittlePill));
+
+    // return view('email.new-album', [
+    //     'album' => Album::first()
+    // ]);
+});
 
 Route::middleware(['not-maintenance'])->group(function(){
     Route::get('/playlists', [PlaylistController::class, 'index'])->name('playlist.index');
@@ -133,6 +157,7 @@ Route::middleware(['custom-auth'])->group(function(){
     Route::middleware(['admin'])->group(function(){
         Route::get('/admin', [AdminController::class, 'view'])->name('admin.view');
         Route::post('/admin', [AdminController::class, 'store'])->name('admin.store');
+        Route::post('/stats', [AdminController::class, 'email'])->name('admin.email');
     });
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::view('/blocked', 'blocked')->name('blocked');

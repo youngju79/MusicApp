@@ -21,4 +21,10 @@
             Save
         </button>
     </form>
+    <hr>
+    <form action="{{route('admin.email')}}" method="POST">
+        @csrf
+        <p>Newsletter:</p>
+        <button type="submit" class="btn btn-primary">Email Stats to Users</button>
+    </form>
 @endsection
