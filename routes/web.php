@@ -34,6 +34,7 @@ if (env('APP_ENV') !== 'local') {
     URL::forceScheme('https');
 }
 
+// MVC- Model View Controller
 Route::get('/', function () {
     return redirect()->route('album.index');
 });
@@ -92,7 +93,6 @@ Route::get('/eloquent', function(){
     ]);
 });
 
-// MVC- Model View Controller
 Route::get('/mail', function(){
     // Mail::raw('What is your favorite framework?', function($message){
     //     $message->to('yongzush@usc.edu')->subject('Hello Yong');
